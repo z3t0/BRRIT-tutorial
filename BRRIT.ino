@@ -15,14 +15,19 @@
 
 
 // Libraries
-#include <NewPing/NewPing.h>
+#include <NewPing.h>
 #include <Servo.h>
 
 // Variables
 
 // Motor:
 int motor_left_pin = 6;
-int motor_right_pin = 7;
+int motor_right_pin = 5;
+
+int left1 = 1;
+int left2 = 2;
+int right1 = 3;
+int right2 = 4;
 
 Servo motor_left;
 Servo motor_right;
@@ -34,34 +39,65 @@ int max_distance = 50;
 NewPing ping(trig, echo, max_distance); // NewPing setup of pins and maximum distance.
 
 void setup() {
+		pinMode(motor_left_pin, OUTPUT);
+		pinMode(motor_right_pin, OUTPUT);
+
+		pinMode(left1, OUTPUT);
+		pinMode(left2, OUTPUT);
+		pinMode(right1, OUTPUT);
+		pinMode(right2, OUTPUT);
+
     // Initialise motors
     motor_left.attach(motor_left_pin);
     motor_right.attach(motor_right_pin);
+
+		digitalWrite(left1, HIGH);
+		digitalWrite(left2, LOW);
+		digitalWrite(right1, HIGH);
+		digitalWrite(right2, LOW);
+		/* writeDirection() */
+		pinMode(13, OUTPUT);
+
 
 }
 
 void loop() {
     // put your main code here, to run repeatedly:
 
-    if (get_sonar() <= 10) {
-        turnLeft()
+/*         turnLeft(); */
+    if (get_sonar() <= 10 && get_sonar() > 1) {
+			digitalWrite(13, HIGH);
+        turnLeft();
     }
     else {
         forward();
+			digitalWrite(13, LOW);
     }
 
 }
 
 void forward() {
-    motor_left.writeMicroseconds(2000);
-    motor_right.writeMicroseconds(2000);
+		digitalWrite(left1, HIGH);
+		digitalWrite(left2, LOW);
+		digitalWrite(right1, HIGH);
+		digitalWrite(right2, LOW);
 }
 
 void turnLeft() {
-    motor_left.writeMicroseconds(1000);
-    motor_right.writeMicroseconds(2000);
+		digitalWrite(left1, LOW);
+		digitalWrite(left2, HIGH);
+		digitalWrite(right1, HIGH);
+		digitalWrite(right2, LOW);
 }
 
 int get_sonar() {
-    return ping.get_cm();
+    return ping.ping_cm();
+}
+
+void writeDirection(int left, int right) {
+		digitalWrite(left1, HIGH);
+		digitalWrite(left2, LOW);
+		digitalWrite(right1, HIGH);
+		digitalWrite(right2, LOW);
+
 }
